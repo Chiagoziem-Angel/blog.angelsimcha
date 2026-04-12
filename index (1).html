@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Angel Simcha — Honest Letters on Building & Leading</title>
+  <meta name="description" content="Unfiltered thoughts on growth, discipline, and the messy reality of doing hard things — delivered straight to your inbox." />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Favicon: replace href with your own -->
+  <!-- <link rel="icon" href="favicon.ico" /> -->
+</head>
+<body>
+
+  <!-- ── Navigation ─────────────────────────────────────── -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">Angel<br>Simcha</a>
+      <ul class="nav__links">
+        <li><a href="index.html" class="active">Letters</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <a href="#subscribe" class="btn btn--gold">Subscribe</a>
+    </div>
+  </nav>
+
+  <!-- ── Hero ───────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="container">
+      <span class="hero__eyebrow">A newsletter by Angel Simcha</span>
+      <h1 class="hero__headline">
+        Honest Letters<br>on<br>
+        <em>Building &amp; Leading</em>
+      </h1>
+      <p class="hero__sub">
+        Unfiltered thoughts on growth, discipline, and the messy reality
+        of doing hard things — delivered straight to your inbox.
+      </p>
+
+      <!-- Subscribe Form (Hero) -->
+      <div class="subscribe-block" id="subscribe">
+        <div class="subscribe-message" id="hero-message"></div>
+        <div class="subscribe-block__form" id="hero-form-wrap">
+          <input
+            type="email"
+            id="hero-email"
+            placeholder="Your email address"
+            autocomplete="email"
+          />
+          <button
+            class="btn btn--gold"
+            onclick="handleSubscribe('hero-email', 'hero-message', 'hero-form-wrap')"
+          >
+            Subscribe
+          </button>
+        </div>
+        <p class="subscribe-block__note">Join curious minds. No spam, unsubscribe anytime.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── Recent Letters ─────────────────────────────────── -->
+  <section class="letters-section">
+    <div class="container">
+      <p class="section-label">Recent Letters</p>
+
+      <!-- Skeleton shown while loading -->
+      <div class="letters-loading" id="letters-skeleton">
+        <div class="skeleton-card">
+          <div class="skeleton-line" style="width:90px;height:12px;margin-bottom:16px;"></div>
+          <div class="skeleton-line" style="width:75%;height:22px;"></div>
+          <div class="skeleton-line" style="width:55%;height:22px;"></div>
+          <div class="skeleton-line" style="width:100%;height:14px;margin-top:16px;"></div>
+          <div class="skeleton-line" style="width:85%;height:14px;"></div>
+          <div class="skeleton-line" style="width:70%;height:14px;"></div>
+        </div>
+        <div class="skeleton-card" style="border-top:1px solid var(--border);padding-top:48px;">
+          <div class="skeleton-line" style="width:90px;height:12px;margin-bottom:16px;"></div>
+          <div class="skeleton-line" style="width:65%;height:22px;"></div>
+          <div class="skeleton-line" style="width:45%;height:22px;"></div>
+          <div class="skeleton-line" style="width:100%;height:14px;margin-top:16px;"></div>
+          <div class="skeleton-line" style="width:90%;height:14px;"></div>
+        </div>
+      </div>
+
+      <!-- Actual letters injected here -->
+      <div class="letters-list" id="letters-list" style="display:none;"></div>
+
+      <!-- Error state -->
+      <p id="letters-error" style="display:none;color:var(--ink-soft);font-size:0.9rem;">
+        Letters couldn't load right now. Check back soon.
+      </p>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── Mid-Page Subscribe Banner ─────────────────────── -->
+  <section style="padding:72px 24px 80px;">
+    <div class="subscribe-banner">
+      <h2 class="subscribe-banner__title serif">Get Angel's Letters</h2>
+      <p class="subscribe-banner__sub">
+        Join readers who get honest, unfiltered thoughts on building, leading,
+        and growing — delivered to your inbox.
+      </p>
+      <div class="subscribe-message" id="banner-message"></div>
+      <div class="subscribe-block" id="banner-form-wrap">
+        <div class="subscribe-block__form">
+          <input
+            type="email"
+            id="banner-email"
+            placeholder="Your email address"
+            autocomplete="email"
+          />
+          <button
+            class="btn btn--gold"
+            onclick="handleSubscribe('banner-email', 'banner-message', 'banner-form-wrap')"
+          >
+            Subscribe
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────── -->
+  <footer class="footer">
+    <p>© 2026 Angel Simcha. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

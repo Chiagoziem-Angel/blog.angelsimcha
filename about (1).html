@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Angel Simcha</title>
+  <meta name="description" content="I write about building, leading, and the uncomfortable truths most people avoid." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── Navigation ─────────────────────────────────────── -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">Angel<br>Simcha</a>
+      <ul class="nav__links">
+        <li><a href="index.html">Letters</a></li>
+        <li><a href="about.html" class="active">About</a></li>
+      </ul>
+      <a href="index.html#subscribe" class="btn btn--gold">Subscribe</a>
+    </div>
+  </nav>
+
+  <!-- ── About Hero ─────────────────────────────────────── -->
+  <section class="about-hero">
+    <div class="container">
+      <h1>About Angel Simcha</h1>
+
+      <div class="about-body">
+        <p>
+          I write about building, leading, and the uncomfortable truths most people avoid.
+          These letters are my honest notes on the journey — no polish, no performance.
+        </p>
+        <p>
+          I believe the best insights come from doing, not theorizing. Every letter is
+          drawn from real experience — the wins, the failures, and everything in between.
+        </p>
+        <p>
+          I'm 23. I co-founded a B2B AI EdTech company. I'm a penultimate Psychology
+          degree student. I'm figuring out what it means to build something that actually matters.
+        </p>
+        <p>
+          If you're building something meaningful and want honest, unfiltered perspectives,
+          you're in the right place.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── Subscribe Banner ───────────────────────────────── -->
+  <section style="padding:72px 24px 80px;">
+    <div class="subscribe-banner">
+      <h2 class="subscribe-banner__title serif">Get Angel's Letters</h2>
+      <p class="subscribe-banner__sub">
+        Join readers who get honest, unfiltered thoughts on building, leading,
+        and growing — delivered to your inbox.
+      </p>
+      <div class="subscribe-message" id="about-message"></div>
+      <div id="about-form-wrap">
+        <div class="subscribe-block">
+          <div class="subscribe-block__form">
+            <input
+              type="email"
+              id="about-email"
+              placeholder="Your email address"
+              autocomplete="email"
+            />
+            <button
+              class="btn btn--gold"
+              onclick="handleSubscribe('about-email', 'about-message', 'about-form-wrap')"
+            >
+              Subscribe
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────── -->
+  <footer class="footer">
+    <p>© 2026 Angel Simcha. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
