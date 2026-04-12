@@ -11,8 +11,8 @@
  *    ConvertKit → Settings → Advanced → API Key
  *    NOT the API Secret — that stays server-side only.
  */
-const CK_FORM_ID  = 'YOUR_FORM_ID';        // e.g. '7654321'
-const CK_API_KEY  = 'YOUR_PUBLIC_API_KEY'; // e.g. 'abc123xyz'
+const CK_FORM_ID  = '62ff0613e9';        // e.g. '7654321'
+const CK_API_KEY  = 'f2U68EiotKULkh4VwNBmkQ'; // e.g. 'abc123xyz'
 
 /**
  *  The serverless function endpoint that proxies ConvertKit
