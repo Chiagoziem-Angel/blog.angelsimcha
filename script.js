@@ -44,6 +44,11 @@ async function handleSubscribe(emailId, messageId, formWrapId) {
     const data = await res.json();
 
     if (res.ok && data.subscription) {
+       // Update button state
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Subscribed ✓';
+      }
       // Hide the form, show success
       const formEl = formWrap?.querySelector('.subscribe-block__form')
                   || formWrap?.querySelector('.subscribe-block');
