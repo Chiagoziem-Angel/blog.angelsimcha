@@ -25,8 +25,11 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     const published = (data.broadcasts || [])
-      .filter(b => b.published_at || b.send_at)
-      .sort((a, b) => new Date(b.published_at || b.send_at) - new Date(a.published_at || a.send_at));
+      .filter(b => b.sent_at || b.created_at)
+      .sort((a, b) =>
+        new Date(b.sent_at || b.created_at) -
+        new Date(a.sent_at || a.created_at)
+      );
 
     return res.status(200).json({ broadcasts: published });
   } catch (err) {
