@@ -19,7 +19,7 @@ export default async function handler(req, res) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          api_key: process.env.CK_PUBLIC_KEY,
+          api_key: process.env.CK_API_KEY,
           email: email,
         }),
       }
