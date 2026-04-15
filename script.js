@@ -52,7 +52,7 @@ async function handleSubscribe(emailId, messageId, formWrapId) {
 
   try {
     const res = await fetch(
-      `https://api.convertkit.com/v3/forms/${CK_FORM_ID}/subscribe`,
+      `https://angelsimcha.kit.com/v3/forms/${CK_FORM_ID}/subscribe`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
