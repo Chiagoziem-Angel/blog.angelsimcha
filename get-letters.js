@@ -1,16 +1,3 @@
-/**
- * Vercel Serverless Function: get-letters
- * File path: /api/get-letters.js
- * Endpoint:  /api/get-letters
- *
- * ─── Setup ───────────────────────────────────────────────────
- * In Vercel dashboard → Project → Settings → Environment Variables, add:
- *   CONVERTKIT_API_SECRET = your_api_secret_here
- *
- * API Secret: ConvertKit → Settings → Advanced → API Secret
- * ─────────────────────────────────────────────────────────────
- */
-
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -27,11 +14,12 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      `https://angelsimcha.kit.com/v3/broadcasts?api_secret=${apiSecret}`
+      `https://api.convertkit.com/v3/broadcasts?api_secret=${apiSecret}`
     );
 
     if (!response.ok) {
-      throw new Error(`ConvertKit API returned ${response.status}`);
+      const text = await response.text();
+      throw new Error(`ConvertKit API error: ${response.status} - ${text}`);
     }
 
     const data = await response.json();
