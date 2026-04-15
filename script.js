@@ -1,27 +1,11 @@
-/**
- * ─────────────────────────────────────────────────────────
- *  CONFIGURATION — fill these in before deploying
- * ─────────────────────────────────────────────────────────
- *
- *  CONVERTKIT_FORM_ID
- *    Go to ConvertKit → Landing Pages & Forms → your form
- *    The ID is in the URL: app.kit.com/forms/[FORM_ID]/edit
- *
- *  CONVERTKIT_API_KEY  (public key — safe to expose)
- *    ConvertKit → Settings → Advanced → API Key
- *    NOT the API Secret — that stays server-side only.
- */
-const CK_FORM_ID  = '62ff0613e9';        // e.g. '7654321'
+
+const CK_FORM_ID  = '9309551';        // e.g. '7654321'
 const CK_API_KEY  = 'f2U68EiotKULkh4VwNBmkQ'; // e.g. 'abc123xyz'
 
-/**
- *  The serverless function endpoint that proxies ConvertKit
- *  broadcasts (created in netlify/functions/get-letters.js).
- *  Leave as-is; Netlify auto-routes /.netlify/functions/*.
- */
+
 const LETTERS_ENDPOINT = '/api/get-letters';
 
-/* ── Success message (shown after subscribe) ─────────────── */
+
 const SUCCESS_MSG = `
   Check your email + SPAM folder in the next 2 minutes for your
   confirmation email because sometimes things get a little <em>"spammy!"</em>
@@ -51,17 +35,11 @@ async function handleSubscribe(emailId, messageId, formWrapId) {
   if (btn) { btn.disabled = true; btn.textContent = 'Subscribing…'; }
 
   try {
-    const res = await fetch(
-      `https://angelsimcha.kit.com/v3/forms/${CK_FORM_ID}/subscribe`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          api_key: CK_API_KEY,
-          email:   email,
-        }),
-      }
-    );
+    const res = await fetch('/api/subscribe', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ email }),
+});
 
     const data = await res.json();
 
