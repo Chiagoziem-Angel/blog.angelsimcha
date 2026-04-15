@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      `https://api.convertkit.com/v3/broadcasts?api_secret=${apiSecret}`
+      `https://angelsimcha.kit.com/v3/broadcasts?api_secret=${apiSecret}`
     );
 
     if (!response.ok) {
