@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Letter — Angel Simcha</title>
+  <meta name="description" content="A letter from Angel Simcha." />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Sanitize ConvertKit's email HTML when rendered on the page */
+    .ck-letter-content {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--ink-mid);
+    }
+
+    .ck-letter-content p {
+      margin-bottom: 24px;
+    }
+
+    .ck-letter-content h1,
+    .ck-letter-content h2,
+    .ck-letter-content h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--ink);
+      margin: 36px 0 16px;
+    }
+
+    .ck-letter-content a {
+      color: var(--gold-dark);
+      text-underline-offset: 3px;
+      text-decoration: underline;
+    }
+
+    .ck-letter-content blockquote {
+      border-left: 3px solid var(--gold);
+      padding: 4px 0 4px 24px;
+      margin: 32px 0;
+      font-style: italic;
+      color: var(--ink);
+    }
+
+    .ck-letter-content img {
+      max-width: 100%;
+      border-radius: 4px;
+      margin: 24px 0;
+    }
+
+    /* Hide ConvertKit footer elements that bleed through */
+    .ck-letter-content .ck-powered-by,
+    .ck-letter-content [class*="footer"],
+    .ck-letter-content [class*="unsubscribe"] {
+      display: none !important;
+    }
+
+    .letter-loading {
+      text-align: center;
+      padding: 80px 0;
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Navigation ─────────────────────────────────────── -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">Angel<br>Simcha</a>
+      <ul class="nav__links">
+        <li><a href="index.html">Letters</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <a href="index.html#subscribe" class="btn btn--gold">Subscribe</a>
+    </div>
+  </nav>
+
+  <!-- ── Letter ─────────────────────────────────────────── -->
+  <article>
+    <section class="letter-page">
+      <div class="container">
+
+        <!-- Loading state -->
+        <div class="letter-loading" id="letter-loading">
+          Loading letter…
+        </div>
+
+        <!-- Error state -->
+        <div id="letter-error" style="display:none; padding: 80px 0; color: var(--ink-soft);">
+          This letter couldn't be loaded. <a href="index.html" style="color:var(--gold);">← Back to all letters</a>
+        </div>
+
+        <!-- Letter content injected here -->
+        <div id="letter-content" style="display:none;">
+          <header class="letter-header">
+            <div class="letter-header__meta">
+              <span class="letter-header__tag" id="letter-tag">Letter</span>
+              <span class="letter-header__date" id="letter-date"></span>
+              <span class="letter-header__read-time" id="letter-read-time"></span>
+            </div>
+            <h1 class="letter-header__title" id="letter-title"></h1>
+          </header>
+
+          <div class="letter-body">
+            <div class="ck-letter-content" id="letter-body"></div>
+
+            <div class="letter-signature">
+              Shallom 🤍<br>
+              <strong>Angel</strong>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </article>
+
+  <hr class="divider" />
+
+  <!-- ── Subscribe ──────────────────────────────────────── -->
+  <section class="letter-subscribe">
+    <div class="container">
+      <div class="subscribe-banner">
+        <h2 class="subscribe-banner__title serif">Get Angel's Letters</h2>
+        <p class="subscribe-banner__sub">
+          Honest, unfiltered thoughts on building, leading, and growing —
+          delivered straight to your inbox.
+        </p>
+        <div class="subscribe-message" id="letter-message"></div>
+        <div id="letter-form-wrap">
+          <div class="subscribe-block">
+            <div class="subscribe-block__form">
+              <input type="email" id="letter-email" placeholder="Your email address" autocomplete="email" />
+              <button class="btn btn--gold"
+                onclick="handleSubscribe('letter-email','letter-message','letter-form-wrap')">
+                Subscribe
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 Angel Simcha. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    (async function () {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      const loadingEl = document.getElementById('letter-loading');
+      const errorEl = document.getElementById('letter-error');
+      const contentEl = document.getElementById('letter-content');
+
+      if (!id) {
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/get-letter?id=${id}`);
+        const data = await res.json();
+
+        const broadcast = data.broadcast || data;
+
+        if (!broadcast || !broadcast.subject) throw new Error('Not found');
+
+        // Populate header
+        document.title = `${broadcast.subject} — Angel Simcha`;
+        document.getElementById('letter-title').textContent = broadcast.subject;
+        document.getElementById('letter-date').textContent = formatDate(broadcast.published_at || broadcast.created_at);
+        document.getElementById('letter-read-time').textContent = estimateReadTime(broadcast.content || '') + ' read';
+
+        // Render body — strip CK footer/unsubscribe block
+        const cleaned = cleanContent(broadcast.content || broadcast.description || '');
+        document.getElementById('letter-body').innerHTML = cleaned;
+
+        // Show content
+        loadingEl.style.display = 'none';
+        contentEl.style.display = 'block';
+
+      } catch (err) {
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+      }
+    })();
+
+    function formatDate(iso) {
+      if (!iso) return '';
+      return new Date(iso).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+    }
+
+    function estimateReadTime(html) {
+      const text = html.replace(/<[^>]+>/g, ' ');
+      const words = text.split(/\s+/).filter(Boolean).length;
+      return Math.max(1, Math.round(words / 200)) + ' min';
+    }
+
+    function cleanContent(html) {
+      // Remove everything from the unsubscribe/footer block downward
+      const cutMarkers = [
+        'unsubscribe',
+        'Unsubscribe',
+        'Built with Kit',
+        'manage your preferences',
+        '{{subscriber',
+      ];
+      let content = html;
+      for (const marker of cutMarkers) {
+        const idx = content.indexOf(marker);
+        if (idx !== -1) {
+          // Walk back to the nearest block tag open before this point
+          const before = content.lastIndexOf('<', idx);
+          content = content.slice(0, before > 0 ? before : idx);
+          break;
+        }
+      }
+      return content;
+    }
+  </script>
+</body>
+
+</html>

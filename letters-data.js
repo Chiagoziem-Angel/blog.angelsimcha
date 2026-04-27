@@ -14,23 +14,23 @@
  */
 const LOCAL_LETTERS = [
 
-  {
-    slug: 'april-25-2026',
-    title: 'On Giving Up',
-    date: 'April 25, 2026',
-    tag: 'Faith',
-    excerpt: 'God didn\'t bring you this far just to leave you. On why you can\'t give up now.',
-    readTime: '4 min',
-  },
+  //{
+  // slug: 'april-25-2026',
+  // title: 'On Giving Up',
+  // date: 'April 25, 2026',
+  // tag: 'Faith',
+  // excerpt: 'God didn\'t bring you this far just to leave you. On why you can\'t give up now.',
+  //readTime: '4 min',
+  //},
 
-  {
-    slug: 'april-16-2026',
-    title: 'I Choose Your Way',
-    date: 'April 16, 2026',
-    tag: 'Faith',
-    excerpt: 'A letter to the Holy Ghost. I choose your way — even when it\'s not easy, even when the flesh resists.',
-    readTime: '2 min',
-  },
+  //{
+  // slug: 'april-16-2026',
+  // title: 'I Choose Your Way',
+  // date: 'April 16, 2026',
+  //tag: 'Faith',
+  // excerpt: 'A letter to the Holy Ghost. I choose your way — even when it\'s not easy, even when the flesh resists.',
+  // readTime: '2 min',
+  //},
 
   // ── TEMPLATE: copy this block for each new letter ──────
   // {
