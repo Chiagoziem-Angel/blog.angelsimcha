@@ -26,12 +26,8 @@ export default async function handler(req, res) {
       return res.status(response.status).json({ error: data });
     }
 
-    // Filter to only published broadcasts (exclude drafts)
-    const published = (data.broadcasts || []).filter(
-      b => b.published_at !== null && b.published_at !== undefined
-    );
-
-    return res.status(200).json({ broadcasts: published });
+    // Return all broadcasts — no filter so nothing gets excluded
+    return res.status(200).json({ broadcasts: data.broadcasts || [] });
 
   } catch (err) {
     return res.status(500).json({ error: err.message });
