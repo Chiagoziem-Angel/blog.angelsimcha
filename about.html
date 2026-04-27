@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About — Angel Simcha</title>
   <meta name="description" content="I write about building, leading, and the uncomfortable truths most people avoid." />
   <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 </head>
+
 <body>
 
   <!-- ── Navigation ─────────────────────────────────────── -->
@@ -61,16 +67,8 @@
       <div id="about-form-wrap">
         <div class="subscribe-block">
           <div class="subscribe-block__form">
-            <input
-              type="email"
-              id="about-email"
-              placeholder="Your email address"
-              autocomplete="email"
-            />
-            <button
-              class="btn btn--gold"
-              onclick="handleSubscribe('about-email', 'about-message', 'about-form-wrap')"
-            >
+            <input type="email" id="about-email" placeholder="Your email address" autocomplete="email" />
+            <button class="btn btn--gold" onclick="handleSubscribe('about-email', 'about-message', 'about-form-wrap')">
               Subscribe
             </button>
           </div>
@@ -86,4 +84,5 @@
 
   <script src="script.js"></script>
 </body>
+
 </html>
