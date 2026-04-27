@@ -1,14 +1,20 @@
-// api/get-letters.js
-// Fetches the list of all published ConvertKit broadcasts.
-// Called by script.js as: /api/get-letters
+// api/get-letter.js
+// Fetches metadata for a single ConvertKit broadcast (subject, dates, etc.)
+// Called by letter.html as: /api/get-letter?id=<broadcast_id>
 //
 // ConvertKit endpoint used:
-//   GET https://api.convertkit.com/v3/broadcasts?api_secret=...
-// Returns: { broadcasts: [ { id, subject, published_at, ... }, ... ] }
+//   GET https://api.convertkit.com/v3/broadcasts/:id?api_secret=...
+// Returns: { broadcast: { id, subject, published_at, created_at, ... } }
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Content-Type', 'application/json');
+
+  const id = req.query.id;
+
+  if (!id) {
+    return res.status(400).json({ error: 'Missing id parameter' });
+  }
 
   const apiSecret = process.env.CONVERTKIT_API_SECRET;
   if (!apiSecret) {
@@ -17,7 +23,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      `https://api.convertkit.com/v3/broadcasts?api_secret=${apiSecret}`
+      `https://api.convertkit.com/v3/broadcasts/${id}?api_secret=${apiSecret}`
     );
 
     const data = await response.json();
@@ -26,12 +32,7 @@ export default async function handler(req, res) {
       return res.status(response.status).json({ error: data });
     }
 
-    // Filter to only published broadcasts (exclude drafts)
-    const published = (data.broadcasts || []).filter(
-      b => b.published_at !== null && b.published_at !== undefined
-    );
-
-    return res.status(200).json({ broadcasts: published });
+    return res.status(200).json(data);
 
   } catch (err) {
     return res.status(500).json({ error: err.message });
