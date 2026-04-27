@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   const apiSecret = process.env.CONVERTKIT_API_SECRET;
 
   if (!apiSecret) {
-    return res.status(500).json({ error: 'CONVERTKIT_API_SECRET is not set in environment variables.' });
+    return res.status(500).json({ error: 'CONVERTKIT_API_SECRET not set.' });
   }
 
   try {
@@ -18,18 +18,17 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(400).json({
-        error: 'ConvertKit rejected the request',
-        ck_status: response.status,
-        ck_detail: data,
-      });
+      return res.status(500).json({ error: data });
     }
 
-    const published = (data.broadcasts || [])
-      .filter(b => b.published_at || b.send_at)
-      .sort((a, b) => new Date(b.published_at || b.send_at) - new Date(a.published_at || a.send_at));
+    // No filter — return all broadcasts, sort newest first
+    const broadcasts = (data.broadcasts || []).sort((a, b) => {
+      const dateA = new Date(a.published_at || a.send_at || a.created_at || 0);
+      const dateB = new Date(b.published_at || b.send_at || b.created_at || 0);
+      return dateB - dateA;
+    });
 
-    return res.status(200).json({ broadcasts: published });
+    return res.status(200).json({ broadcasts });
 
   } catch (err) {
     return res.status(500).json({ error: err.message });

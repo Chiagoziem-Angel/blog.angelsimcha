@@ -147,7 +147,7 @@ async function fetchFromConvertKit(skeleton, list, errorEl) {
   try {
     const res = await fetch(LETTERS_ENDPOINT);
     const data = await res.json();
-    if (!res.ok || !data.broadcasts || data.broadcasts.length === 0) throw new Error();
+    if (!res.ok || !data.broadcasts) throw new Error();
     if (skeleton) skeleton.style.display = 'none';
     list.style.display = 'flex';
     list.innerHTML = data.broadcasts.slice(0, 6).map(renderCKCard).join('');
