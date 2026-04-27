@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ✏️ EDIT: Change title and description for each letter -->
+  <title>YOUR LETTER TITLE — Angel Simcha</title>
+  <meta name="description" content="One sentence summary of this letter." />
+
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+
+<body>
+
+  <!-- ── Navigation ─────────────────────────────────────── -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="../index.html" class="nav__logo">Angel<br>Simcha</a>
+      <ul class="nav__links">
+        <li><a href="../index.html">Letters</a></li>
+        <li><a href="../about.html">About</a></li>
+      </ul>
+      <a href="../index.html#subscribe" class="btn btn--gold">Subscribe</a>
+    </div>
+  </nav>
+
+  <!-- ── Letter Header ──────────────────────────────────── -->
+  <article>
+    <section class="letter-page">
+      <div class="container">
+        <header class="letter-header">
+          <div class="letter-header__meta">
+            <!-- ✏️ EDIT: Change tag, date, read time -->
+            <span class="letter-header__tag">Letter</span>
+            <span class="letter-header__date">April 16, 2026</span>
+            <span class="letter-header__read-time">3 min read</span>
+          </div>
+
+          <!-- ✏️ EDIT: Your letter title -->
+          <h1 class="letter-header__title">YOUR LETTER TITLE HERE</h1>
+
+          <!-- ✏️ EDIT: Optional one-line hook under the title -->
+          <p class="letter-header__lede">
+            One line that hooks the reader. Optional — delete this p tag if you don't want it.
+          </p>
+        </header>
+
+        <!-- ── Letter Body ─────────────────────────────── -->
+        <div class="letter-body">
+
+          <!-- ✏️ WRITE YOUR LETTER BELOW THIS LINE -->
+          <!-- Everything between these comments is your letter content -->
+
+          <p>April 16th</p>
+
+          <p>
+            Your opening paragraph goes here. Write naturally — this is a letter,
+            not a blog post. Talk directly to the reader.
+          </p>
+
+          <p>
+            Second paragraph. Keep paragraphs short. Newsletter readers scan.
+          </p>
+
+          <!-- Example of a section header -->
+          <h2>A heading if you need one</h2>
+
+          <p>More content under the heading.</p>
+
+          <!-- Example of a blockquote -->
+          <blockquote>
+            A quote or a key idea you want to pull out visually.
+          </blockquote>
+
+          <!-- Example of an image -->
+          <!-- <img src="../images/your-image.jpg" alt="Describe the image" />
+          <span class="img-caption">Optional caption under the image</span> -->
+
+          <!-- Example of a list -->
+          <!-- <ul>
+            <li>First point</li>
+            <li>Second point</li>
+            <li>Third point</li>
+          </ul> -->
+
+          <!-- Example of a link -->
+          <!-- <p>Here's a <a href="https://example.com" target="_blank" rel="noopener">link to something</a>.</p> -->
+
+          <!-- ✏️ WRITE YOUR LETTER ABOVE THIS LINE -->
+
+          <!-- Signature — edit name/sign-off as you like -->
+          <div class="letter-signature">
+            Until next time,<br>
+            <strong>Angel</strong>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </article>
+
+  <hr class="divider" />
+
+  <!-- ── Read Next ───────────────────────────────────────── -->
+  <!-- ✏️ EDIT: Update these links to point to your actual letters -->
+  <section class="read-next">
+    <div class="container">
+      <p class="read-next__label">Read Next</p>
+      <div class="read-next__list">
+        <a class="read-next__item" href="./april-16-2026.html">
+          <span class="read-next__item-date">Apr 16</span>
+          <span class="read-next__item-title">I Choose Your Way</span>
+        </a>
+        <!-- Add more letters here as you publish them -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Subscribe ──────────────────────────────────────── -->
+  <section class="letter-subscribe">
+    <div class="container">
+      <div class="subscribe-banner">
+        <h2 class="subscribe-banner__title serif">Get Angel's Letters</h2>
+        <p class="subscribe-banner__sub">
+          Honest, unfiltered thoughts on building, leading, and growing —
+          delivered straight to your inbox.
+        </p>
+        <div class="subscribe-message" id="letter-message"></div>
+        <div id="letter-form-wrap">
+          <div class="subscribe-block">
+            <div class="subscribe-block__form">
+              <input type="email" id="letter-email" placeholder="Your email address" autocomplete="email" />
+              <button class="btn btn--gold"
+                onclick="handleSubscribe('letter-email', 'letter-message', 'letter-form-wrap')">
+                Subscribe
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────── -->
+  <footer class="footer">
+    <p>© 2026 Angel Simcha. All rights reserved.</p>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+
+</html>

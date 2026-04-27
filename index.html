@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Angel Simcha — Honest Letters on Building & Leading</title>
-  <meta name="description" content="Unfiltered thoughts on growth, discipline, and the messy reality of doing hard things — delivered straight to your inbox." />
+  <meta name="description"
+    content="Unfiltered thoughts on growth, discipline, and the messy reality of doing hard things — delivered straight to your inbox." />
   <link rel="stylesheet" href="styles.css" />
   <!-- Favicon: replace href with your own -->
   <!-- <link rel="icon" href="favicon.ico" /> -->
 </head>
+
 <body>
 
   <!-- ── Navigation ─────────────────────────────────────── -->
   <nav class="nav">
     <div class="nav__inner">
-      <a href="index.html" class="nav__logo">Angel<span style="color:#C9A227">.</span></a>
+      <a href="index.html" class="nav__logo">Angel<br>Simcha</a>
       <ul class="nav__links">
         <li><a href="index.html" class="active">Letters</a></li>
         <li><a href="about.html">About</a></li>
@@ -40,16 +43,8 @@
       <div class="subscribe-block" id="subscribe">
         <div class="subscribe-message" id="hero-message"></div>
         <div class="subscribe-block__form" id="hero-form-wrap">
-          <input
-            type="email"
-            id="hero-email"
-            placeholder="Your email address"
-            autocomplete="email"
-          />
-          <button
-            class="btn btn--gold"
-            onclick="handleSubscribe('hero-email', 'hero-message', 'hero-form-wrap')"
-          >
+          <input type="email" id="hero-email" placeholder="Your email address" autocomplete="email" />
+          <button class="btn btn--gold" onclick="handleSubscribe('hero-email', 'hero-message', 'hero-form-wrap')">
             Subscribe
           </button>
         </div>
@@ -63,7 +58,13 @@
   <!-- ── Recent Letters ─────────────────────────────────── -->
   <section class="letters-section">
     <div class="container">
-      <p class="section-label">Recent Letters</p>
+      <div
+        style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:40px;padding-bottom:16px;border-bottom:1px solid var(--border);">
+        <p
+          style="font-size:0.72rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-soft);margin:0;">
+          Recent Letters</p>
+        <div class="category-filters" id="category-filters"></div>
+      </div>
 
       <!-- Skeleton shown while loading -->
       <div class="letters-loading" id="letters-skeleton">
@@ -107,16 +108,8 @@
       <div class="subscribe-message" id="banner-message"></div>
       <div class="subscribe-block" id="banner-form-wrap">
         <div class="subscribe-block__form">
-          <input
-            type="email"
-            id="banner-email"
-            placeholder="Your email address"
-            autocomplete="email"
-          />
-          <button
-            class="btn btn--gold"
-            onclick="handleSubscribe('banner-email', 'banner-message', 'banner-form-wrap')"
-          >
+          <input type="email" id="banner-email" placeholder="Your email address" autocomplete="email" />
+          <button class="btn btn--gold" onclick="handleSubscribe('banner-email', 'banner-message', 'banner-form-wrap')">
             Subscribe
           </button>
         </div>
@@ -129,6 +122,8 @@
     <p>© 2026 Angel Simcha. All rights reserved.</p>
   </footer>
 
+  <script src="letters-data.js"></script>
   <script src="script.js"></script>
 </body>
+
 </html>
