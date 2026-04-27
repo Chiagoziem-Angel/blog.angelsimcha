@@ -1,10 +1,6 @@
 // api/get-letter-content.js
 // Fetches the full HTML body of a ConvertKit broadcast.
-// Called by letter.html as: /api/get-letter-content?id=<broadcast_id>
-//
-// ConvertKit endpoint used:
-//   GET https://api.convertkit.com/v3/broadcasts/:id/content?api_secret=...
-// Returns: { content: "...full HTML email body..." }
+// Tries /broadcasts/:id/content first, falls back to /broadcasts/:id directly.
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -22,20 +18,35 @@ export default async function handler(req, res) {
   }
 
   try {
-    // NOTE: This is the correct endpoint for full HTML content.
-    // /v3/broadcasts/:id alone only returns metadata (no content field).
-    const response = await fetch(
+    // First try the /content endpoint (works for sent broadcasts)
+    const contentRes = await fetch(
       `https://api.convertkit.com/v3/broadcasts/${id}/content?api_secret=${apiSecret}`
     );
+    const contentData = await contentRes.json();
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return res.status(response.status).json({ error: data });
+    if (contentRes.ok && contentData.content) {
+      return res.status(200).json({ content: contentData.content });
     }
 
-    // Return the full response — it contains { content: "...html..." }
-    return res.status(200).json(data);
+    // Fallback: fetch the broadcast itself and use its body/description
+    const broadcastRes = await fetch(
+      `https://api.convertkit.com/v3/broadcasts/${id}?api_secret=${apiSecret}`
+    );
+    const broadcastData = await broadcastRes.json();
+
+    if (!broadcastRes.ok) {
+      return res.status(broadcastRes.status).json({ error: broadcastData });
+    }
+
+    const broadcast = broadcastData.broadcast || broadcastData;
+    const content = broadcast.content || broadcast.body || broadcast.description || '';
+
+    return res.status(200).json({
+      content,
+      subject: broadcast.subject,
+      published_at: broadcast.published_at,
+      created_at: broadcast.created_at,
+    });
 
   } catch (err) {
     return res.status(500).json({ error: err.message });

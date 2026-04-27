@@ -12,7 +12,6 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <style>
-    /* Sanitize ConvertKit's email HTML when rendered on the page */
     .ck-letter-content {
       font-family: 'DM Sans', sans-serif;
       font-size: 1.05rem;
@@ -52,7 +51,6 @@
       margin: 24px 0;
     }
 
-    /* Hide ConvertKit footer elements that bleed through */
     .ck-letter-content .ck-powered-by,
     .ck-letter-content [class*="footer"],
     .ck-letter-content [class*="unsubscribe"] {
@@ -87,17 +85,12 @@
     <section class="letter-page">
       <div class="container">
 
-        <!-- Loading state -->
-        <div class="letter-loading" id="letter-loading">
-          Loading letter…
-        </div>
+        <div class="letter-loading" id="letter-loading">Loading letter…</div>
 
-        <!-- Error state -->
         <div id="letter-error" style="display:none; padding: 80px 0; color: var(--ink-soft);">
           This letter couldn't be loaded. <a href="index.html" style="color:var(--gold);">← Back to all letters</a>
         </div>
 
-        <!-- Letter content injected here -->
         <div id="letter-content" style="display:none;">
           <header class="letter-header">
             <div class="letter-header__meta">
@@ -110,7 +103,6 @@
 
           <div class="letter-body">
             <div class="ck-letter-content" id="letter-body"></div>
-
             <div class="letter-signature">
               Shallom 🤍<br>
               <strong>Angel</strong>
@@ -169,37 +161,28 @@
       }
 
       try {
-        // Step 1: Fetch broadcast metadata (subject, published_at, etc.)
-        const metaRes = await fetch(`/api/get-letter?id=${id}`);
-        const metaData = await metaRes.json();
+        // Single call to get-letter-content — returns subject + content together
+        const res = await fetch(`/api/get-letter-content?id=${id}`);
+        const data = await res.json();
 
-        if (!metaRes.ok) throw new Error(metaData.error || 'Metadata fetch failed');
+        if (!res.ok) throw new Error(data.error || 'Failed to load letter');
 
-        // ConvertKit returns { broadcast: { id, subject, published_at, ... } }
-        const broadcast = metaData.broadcast || metaData;
+        // Subject can come from /content endpoint or our fallback
+        const subject = data.subject || data.broadcast?.subject || 'Letter';
+        const date = data.published_at || data.created_at || '';
+        const bodyHtml = data.content || '';
 
-        if (!broadcast || !broadcast.subject) throw new Error('Broadcast not found');
-
-        // Step 2: Fetch the actual HTML content via the /content endpoint
-        const contentRes = await fetch(`/api/get-letter-content?id=${id}`);
-        const contentData = await contentRes.json();
-
-        if (!contentRes.ok) throw new Error(contentData.error || 'Content fetch failed');
-
-        // ConvertKit /broadcasts/:id/content returns { content: "...html..." }
-        const bodyHtml = contentData.content || '';
+        if (!subject) throw new Error('Letter not found');
 
         // Populate header
-        document.title = `${broadcast.subject} — Angel Simcha`;
-        document.getElementById('letter-title').textContent = broadcast.subject;
-        document.getElementById('letter-date').textContent = formatDate(broadcast.published_at || broadcast.created_at);
+        document.title = `${subject} — Angel Simcha`;
+        document.getElementById('letter-title').textContent = subject;
+        document.getElementById('letter-date').textContent = formatDate(date);
         document.getElementById('letter-read-time').textContent = estimateReadTime(bodyHtml) + ' read';
 
-        // Render body — strip CK footer/unsubscribe block
-        const cleaned = cleanContent(bodyHtml);
-        document.getElementById('letter-body').innerHTML = cleaned;
+        // Render body
+        document.getElementById('letter-body').innerHTML = cleanContent(bodyHtml);
 
-        // Show content
         loadingEl.style.display = 'none';
         contentEl.style.display = 'block';
 
@@ -224,13 +207,9 @@
     }
 
     function cleanContent(html) {
-      // Remove everything from the unsubscribe/footer block downward
       const cutMarkers = [
-        'unsubscribe',
-        'Unsubscribe',
-        'Built with Kit',
-        'manage your preferences',
-        '{{subscriber',
+        'unsubscribe', 'Unsubscribe',
+        'Built with Kit', 'manage your preferences', '{{subscriber',
       ];
       let content = html;
       for (const marker of cutMarkers) {
