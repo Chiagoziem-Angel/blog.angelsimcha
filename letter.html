@@ -169,21 +169,34 @@
       }
 
       try {
-        const res = await fetch(`/api/get-letter?id=${id}`);
-        const data = await res.json();
+        // Step 1: Fetch broadcast metadata (subject, published_at, etc.)
+        const metaRes = await fetch(`/api/get-letter?id=${id}`);
+        const metaData = await metaRes.json();
 
-        const broadcast = data.broadcast || data.broadcasts?.[0] || data;
+        if (!metaRes.ok) throw new Error(metaData.error || 'Metadata fetch failed');
 
-        if (!broadcast || !broadcast.subject) throw new Error('Not found');
+        // ConvertKit returns { broadcast: { id, subject, published_at, ... } }
+        const broadcast = metaData.broadcast || metaData;
+
+        if (!broadcast || !broadcast.subject) throw new Error('Broadcast not found');
+
+        // Step 2: Fetch the actual HTML content via the /content endpoint
+        const contentRes = await fetch(`/api/get-letter-content?id=${id}`);
+        const contentData = await contentRes.json();
+
+        if (!contentRes.ok) throw new Error(contentData.error || 'Content fetch failed');
+
+        // ConvertKit /broadcasts/:id/content returns { content: "...html..." }
+        const bodyHtml = contentData.content || '';
 
         // Populate header
         document.title = `${broadcast.subject} — Angel Simcha`;
         document.getElementById('letter-title').textContent = broadcast.subject;
         document.getElementById('letter-date').textContent = formatDate(broadcast.published_at || broadcast.created_at);
-        document.getElementById('letter-read-time').textContent = estimateReadTime(broadcast.content || '') + ' read';
+        document.getElementById('letter-read-time').textContent = estimateReadTime(bodyHtml) + ' read';
 
         // Render body — strip CK footer/unsubscribe block
-        const cleaned = cleanContent(broadcast.content || broadcast.description || '');
+        const cleaned = cleanContent(bodyHtml);
         document.getElementById('letter-body').innerHTML = cleaned;
 
         // Show content
@@ -191,6 +204,7 @@
         contentEl.style.display = 'block';
 
       } catch (err) {
+        console.error('Letter load error:', err);
         loadingEl.style.display = 'none';
         errorEl.style.display = 'block';
       }
@@ -222,7 +236,6 @@
       for (const marker of cutMarkers) {
         const idx = content.indexOf(marker);
         if (idx !== -1) {
-          // Walk back to the nearest block tag open before this point
           const before = content.lastIndexOf('<', idx);
           content = content.slice(0, before > 0 ? before : idx);
           break;

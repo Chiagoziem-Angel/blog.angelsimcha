@@ -1,10 +1,10 @@
-// api/get-letter.js
-// Fetches metadata for a single ConvertKit broadcast (subject, dates, etc.)
-// Called by letter.html as: /api/get-letter?id=<broadcast_id>
+// api/get-letter-content.js
+// Fetches the full HTML body of a ConvertKit broadcast.
+// Called by letter.html as: /api/get-letter-content?id=<broadcast_id>
 //
 // ConvertKit endpoint used:
-//   GET https://api.convertkit.com/v3/broadcasts/:id?api_secret=...
-// Returns: { broadcast: { id, subject, published_at, created_at, ... } }
+//   GET https://api.convertkit.com/v3/broadcasts/:id/content?api_secret=...
+// Returns: { content: "...full HTML email body..." }
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -22,8 +22,10 @@ export default async function handler(req, res) {
   }
 
   try {
+    // NOTE: This is the correct endpoint for full HTML content.
+    // /v3/broadcasts/:id alone only returns metadata (no content field).
     const response = await fetch(
-      `https://api.convertkit.com/v3/broadcasts/${id}?api_secret=${apiSecret}`
+      `https://api.convertkit.com/v3/broadcasts/${id}/content?api_secret=${apiSecret}`
     );
 
     const data = await response.json();
@@ -32,6 +34,7 @@ export default async function handler(req, res) {
       return res.status(response.status).json({ error: data });
     }
 
+    // Return the full response — it contains { content: "...html..." }
     return res.status(200).json(data);
 
   } catch (err) {

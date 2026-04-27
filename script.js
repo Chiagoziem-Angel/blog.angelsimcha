@@ -1,10 +1,7 @@
-
-const CK_FORM_ID = '9309551';        // e.g. '7654321'
-const CK_API_KEY = 'f2U68EiotKULkh4VwNBmkQ'; // e.g. 'abc123xyz'
-
+const CK_FORM_ID = '9309551';
+const CK_API_KEY = 'f2U68EiotKULkh4VwNBmkQ';
 
 const LETTERS_ENDPOINT = '/api/get-letters';
-
 
 const SUCCESS_MSG = `
   Check your email + SPAM folder in the next 2 minutes for your
@@ -66,9 +63,10 @@ function showMessage(el, type, html) {
 
 /* ─────────────────────────────────────────────────────────── */
 /*  Letters + Category Filter                                  */
+/*  LOCAL_LETTERS removed — always fetches live from CK API   */
 /* ─────────────────────────────────────────────────────────── */
-let ALL_LETTERS = [];          // holds full LOCAL_LETTERS array
-let activeCategory = 'All';   // currently selected filter
+let ALL_LETTERS = [];
+let activeCategory = 'All';
 
 function loadLetters() {
   const skeleton = document.getElementById('letters-skeleton');
@@ -77,24 +75,44 @@ function loadLetters() {
 
   if (!list) return;
 
-  if (typeof LOCAL_LETTERS !== 'undefined' && LOCAL_LETTERS.length > 0) {
-    ALL_LETTERS = LOCAL_LETTERS;
+  // Always fetch live from the API — no LOCAL_LETTERS fallback
+  fetchFromConvertKit(skeleton, list, errorEl);
+}
+
+async function fetchFromConvertKit(skeleton, list, errorEl) {
+  try {
+    const res = await fetch(LETTERS_ENDPOINT);
+    const data = await res.json();
+
+    if (!res.ok || !data.broadcasts) throw new Error('No broadcasts returned');
+
+    ALL_LETTERS = data.broadcasts.map(b => ({
+      id: b.id,
+      title: b.subject || 'Untitled Letter',
+      date: formatDate(b.published_at || b.created_at),
+      excerpt: stripHtml(b.description || b.content || '').slice(0, 200),
+      readTime: estimateReadTime(b.content || ''),
+      tag: 'Letter', // ConvertKit doesn't return tags on broadcast list; default to "Letter"
+    }));
+
     if (skeleton) skeleton.style.display = 'none';
     list.style.display = 'flex';
+
     buildCategoryFilters();
     renderFiltered();
-  } else {
-    // Fallback: ConvertKit API (no category filters in this path)
-    fetchFromConvertKit(skeleton, list, errorEl);
+
+  } catch (err) {
+    console.error('Failed to load letters:', err);
+    if (skeleton) skeleton.style.display = 'none';
+    if (errorEl) errorEl.style.display = 'block';
   }
 }
 
-/* Build "All · Faith · Building · …" filter buttons */
+/* ── Category filters ─────────────────────────────────────── */
 function buildCategoryFilters() {
   const container = document.getElementById('category-filters');
   if (!container) return;
 
-  // Collect unique tags
   const tags = ['All', ...new Set(ALL_LETTERS.map(l => l.tag).filter(Boolean))];
 
   container.innerHTML = tags.map(tag => `
@@ -107,7 +125,7 @@ function buildCategoryFilters() {
 
 function setCategory(tag) {
   activeCategory = tag;
-  buildCategoryFilters();   // re-render buttons (updates active class)
+  buildCategoryFilters();
   renderFiltered();
 }
 
@@ -124,11 +142,13 @@ function renderFiltered() {
     return;
   }
 
-  list.innerHTML = filtered.map(renderLocalLetterCard).join('');
+  list.innerHTML = filtered.map(renderCKCard).join('');
 }
 
-/* ── Render helpers ───────────────────────────────────────── */
-function renderLocalLetterCard(letter) {
+/* ── Card renderer ────────────────────────────────────────── */
+function renderCKCard(letter) {
+  // Link points to letter.html?id=<broadcast_id>
+  const url = `letter.html?id=${letter.id}`;
   return `
     <article class="letter-card">
       <div class="letter-card__meta">
@@ -138,40 +158,6 @@ function renderLocalLetterCard(letter) {
       </div>
       <h2 class="letter-card__title">${escapeHtml(letter.title)}</h2>
       ${letter.excerpt ? `<p class="letter-card__excerpt">${escapeHtml(letter.excerpt)}</p>` : ''}
-      <a class="letter-card__link" href="letters/${letter.slug}.html">Read letter →</a>
-    </article>
-  `;
-}
-
-async function fetchFromConvertKit(skeleton, list, errorEl) {
-  try {
-    const res = await fetch(LETTERS_ENDPOINT);
-    const data = await res.json();
-    if (!res.ok || !data.broadcasts) throw new Error();
-    if (skeleton) skeleton.style.display = 'none';
-    list.style.display = 'flex';
-    list.innerHTML = data.broadcasts.slice(0, 6).map(renderCKCard).join('');
-  } catch {
-    if (skeleton) skeleton.style.display = 'none';
-    if (errorEl) errorEl.style.display = 'block';
-  }
-}
-
-function renderCKCard(broadcast) {
-  const date = formatDate(broadcast.created_at || broadcast.published_at);
-  const title = broadcast.subject || 'Untitled Letter';
-  const excerpt = stripHtml(broadcast.description || broadcast.content || '').slice(0, 200);
-  const rt = estimateReadTime(broadcast.content || '');
-  const url = `letter.html?id=${broadcast.id}`;
-  return `
-    <article class="letter-card">
-      <div class="letter-card__meta">
-        <span class="letter-card__tag">Letter</span>
-        <span class="letter-card__date">${date}</span>
-        ${rt ? `<span class="letter-card__read-time">${rt} read</span>` : ''}
-      </div>
-      <h2 class="letter-card__title">${escapeHtml(title)}</h2>
-      ${excerpt ? `<p class="letter-card__excerpt">${escapeHtml(excerpt)}</p>` : ''}
       <a class="letter-card__link" href="${url}">Read letter →</a>
     </article>
   `;
@@ -180,7 +166,9 @@ function renderCKCard(broadcast) {
 /* ─── Utility helpers ──────────────────────────────────────── */
 function formatDate(iso) {
   if (!iso) return '';
-  return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  return new Date(iso).toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
 }
 
 function stripHtml(html) {
@@ -191,8 +179,10 @@ function stripHtml(html) {
 
 function escapeHtml(str) {
   return String(str)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 function estimateReadTime(content) {
