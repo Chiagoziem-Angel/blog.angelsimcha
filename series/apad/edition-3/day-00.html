@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to APAD Edition 3 — Angel Simcha</title>
+  <meta name="description"
+    content="A Proverb A Day, Edition 3. Thirty-one days, one chapter of Proverbs at a time. Starting May 2026." />
+  <link rel="stylesheet" href="../../../styles.css" />
+</head>
+
+<body>
+
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="../../../index.html" class="nav__logo">Angel<br>Simcha</a>
+      <ul class="nav__links">
+        <li><a href="../../../index.html">Letters</a></li>
+        <li><a href="../../../series.html" class="active">Series</a></li>
+        <li><a href="../../../about.html">About</a></li>
+      </ul>
+      <a href="../../../index.html#subscribe" class="btn btn--gold">Subscribe</a>
+    </div>
+  </nav>
+
+  <article>
+    <section class="letter-page">
+      <div class="container">
+        <header class="letter-header">
+          <div class="letter-header__meta">
+            <span class="letter-header__tag" style="color:var(--gold);">APAD · Edition 3 · Day 0</span>
+            <span class="letter-header__date">May 1, 2026</span>
+            <span class="letter-header__read-time">2 min read</span>
+          </div>
+          <h1 class="letter-header__title">Welcome to A Proverb A Day — Edition 3</h1>
+          <p class="letter-header__lede">
+            Thirty-one days. One chapter of Proverbs at a time. Straight from the source.
+          </p>
+        </header>
+
+        <div class="letter-body">
+
+          <p>
+            If you're new here — welcome. I'm Angel Simcha, and every May and October
+            I run a series called <strong>A Proverb A Day</strong> — APAD for short.
+          </p>
+
+          <p>
+            The premise is simple: the book of Proverbs has 31 chapters.
+            One for every day of the month. For 31 days, we read one chapter a day
+            and pull out what it actually means for our lives right now.
+          </p>
+
+          <blockquote>
+            I'm a firm believer that the word of God has everything you need for success.
+            Most of the books we read today, every success principle in theory you know of —
+            it all came from the Bible. So instead of reading all the derivatives,
+            why not just get it straight from the source?
+          </blockquote>
+
+          <p>
+            That's what this series is about. Not a theology lecture.
+            Not a devotional that stays vague. Real insight, real application,
+            real life — one proverb at a time.
+          </p>
+
+          <h2>How it works</h2>
+
+          <p>
+            Starting tomorrow, a new entry drops every day for 31 days.
+            Each one covers one full chapter of Proverbs — the key themes,
+            what it's saying, and how to actually apply it.
+          </p>
+
+          <p>
+            You can read along here on the site, or subscribe below to get
+            each entry delivered straight to your inbox.
+          </p>
+
+          <p>
+            This is Edition 3. If you were here for Edition 1 (May 2025) or
+            Edition 2 (October 2025) — welcome back. Let's go deeper this time.
+          </p>
+
+          <p>
+            If this is your first time — you're right on time. Day 1 starts tomorrow.
+          </p>
+
+          <div class="letter-signature">
+            Shallom 🤍<br>
+            <strong>Angel</strong>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </article>
+
+  <hr class="divider" />
+
+  <!-- Read Next: links to other days in this edition -->
+  <section class="read-next">
+    <div class="container">
+      <p class="read-next__label">A Proverb A Day — Edition 3</p>
+      <div class="read-next__list">
+        <a class="read-next__item" href="./day-00.html">
+          <span class="read-next__item-date">Day 0</span>
+          <span class="read-next__item-title">Welcome to Edition 3 (You are here)</span>
+        </a>
+        <!-- Add each day here as you publish -->
+        <!-- <a class="read-next__item" href="./day-01.html">
+          <span class="read-next__item-date">Day 1</span>
+          <span class="read-next__item-title">Proverbs 1 — The Beginning of Wisdom</span>
+        </a> -->
+        <a class="read-next__item" href="../../../series.html">
+          <span class="read-next__item-date">←</span>
+          <span class="read-next__item-title">Back to all series</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Subscribe -->
+  <section class="letter-subscribe">
+    <div class="container">
+      <div class="subscribe-banner">
+        <h2 class="subscribe-banner__title serif">Follow Along Daily</h2>
+        <p class="subscribe-banner__sub">
+          Get each day's entry delivered to your inbox for the full 31 days.
+        </p>
+        <div class="subscribe-message" id="letter-message"></div>
+        <div id="letter-form-wrap">
+          <div class="subscribe-block">
+            <div class="subscribe-block__form">
+              <input type="email" id="letter-email" placeholder="Your email address" autocomplete="email" />
+              <button class="btn btn--gold"
+                onclick="handleSubscribe('letter-email','letter-message','letter-form-wrap')">Subscribe</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 Angel Simcha. All rights reserved.</p>
+  </footer>
+
+  <script src="../../../script.js"></script>
+</body>
+
+</html>

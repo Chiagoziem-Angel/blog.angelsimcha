@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Series — Angel Simcha</title>
+  <meta name="description" content="31-day writing series on faith, wisdom, and the word of God." />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ── Series Page Styles ─────────────────────────────── */
+    .series-hero {
+      padding: 72px 24px 56px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .series-hero h1 {
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .series-hero p {
+      font-size: 1rem;
+      color: var(--ink-mid);
+      max-width: 520px;
+      line-height: 1.75;
+    }
+
+    /* ── Series Cards ───────────────────────────────────── */
+    .series-grid {
+      padding: 64px 24px 80px;
+    }
+
+    .series-grid .container {
+      max-width: 760px;
+    }
+
+    .series-card {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 48px;
+    }
+
+    .series-card__header {
+      padding: 32px 36px 28px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .series-card__tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 100px;
+      margin-bottom: 16px;
+      background: var(--series-color, var(--gold));
+      color: #fff;
+    }
+
+    .series-card__title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--ink);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .series-card__tagline {
+      font-size: 0.95rem;
+      color: var(--ink-mid);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .series-card__desc {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      line-height: 1.75;
+    }
+
+    /* ── Editions ───────────────────────────────────────── */
+    .editions-list {
+      padding: 0;
+    }
+
+    .edition-block {
+      padding: 24px 36px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .edition-block:last-child {
+      border-bottom: none;
+    }
+
+    .edition-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .edition-header__left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .edition-label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .edition-period {
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+    }
+
+    .edition-status {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      color: var(--ink-soft);
+    }
+
+    .edition-status.live {
+      border-color: #4CAF50;
+      color: #2E7D32;
+    }
+
+    .edition-status.coming {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .edition-status.complete {
+      border-color: var(--border);
+      color: var(--ink-soft);
+    }
+
+    .edition-toggle {
+      font-size: 1rem;
+      color: var(--ink-soft);
+      transition: transform 0.2s;
+    }
+
+    .edition-block.open .edition-toggle {
+      transform: rotate(180deg);
+    }
+
+    /* ── Days Grid ──────────────────────────────────────── */
+    .days-grid {
+      display: none;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+      padding-bottom: 8px;
+    }
+
+    .edition-block.open .days-grid {
+      display: grid;
+    }
+
+    .day-pill {
+      display: flex;
+      flex-direction: column;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      transition: border-color 0.2s, background 0.2s;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .day-pill:hover {
+      border-color: var(--gold);
+      background: #fff;
+    }
+
+    .day-pill.coming {
+      opacity: 0.45;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .day-pill__num {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .day-pill.coming .day-pill__num {
+      color: var(--ink-soft);
+    }
+
+    .day-pill__title {
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .day-pill__date {
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+      margin-top: 4px;
+    }
+
+    .empty-edition {
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      font-style: italic;
+      padding: 8px 0;
+    }
+
+    @media (max-width: 600px) {
+
+      .series-card__header,
+      .edition-block {
+        padding: 20px 20px;
+      }
+
+      .days-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Navigation ─────────────────────────────────────── -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">Angel<br>Simcha</a>
+      <ul class="nav__links">
+        <li><a href="index.html">Letters</a></li>
+        <li><a href="series.html" class="active">Series</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <a href="index.html#subscribe" class="btn btn--gold">Subscribe</a>
+    </div>
+  </nav>
+
+  <!-- ── Hero ───────────────────────────────────────────── -->
+  <section class="series-hero">
+    <div class="container">
+      <h1>Series</h1>
+      <p>
+        Thirty-one days at a time. Deep dives into God's word, journal entries,
+        and lessons from the road — published in seasons.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── Series Cards ───────────────────────────────────── -->
+  <section class="series-grid">
+    <div class="container">
+      <div id="series-container"></div>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────── -->
+  <footer class="footer">
+    <p>© 2026 Angel Simcha. All rights reserved.</p>
+  </footer>
+
+  <script src="series-data.js"></script>
+  <script>
+    function buildSeriesPage() {
+      const container = document.getElementById('series-container');
+      if (!container || !SERIES_DATA) return;
+
+      container.innerHTML = SERIES_DATA.map(series => `
+        <div class="series-card">
+          <div class="series-card__header" style="--series-color: ${series.color}">
+            <span class="series-card__tag" style="background:${series.color}">${series.shortTitle}</span>
+            <h2 class="series-card__title">${series.title}</h2>
+            <p class="series-card__tagline">${series.tagline}</p>
+            <p class="series-card__desc">${series.description}</p>
+          </div>
+          <div class="editions-list">
+            ${series.editions.map((edition, i) => buildEdition(edition, i === 0)).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function buildEdition(edition, openByDefault) {
+      const hasDays = edition.days && edition.days.length > 0;
+      return `
+        <div class="edition-block ${openByDefault ? 'open' : ''}" id="${edition.id}">
+          <div class="edition-header" onclick="toggleEdition('${edition.id}')">
+            <div class="edition-header__left">
+              <span class="edition-label">${edition.label}</span>
+              <span class="edition-period">${edition.period}</span>
+              <span class="edition-status ${edition.status}">${statusLabel(edition.status)}</span>
+            </div>
+            <span class="edition-toggle">↓</span>
+          </div>
+          <div class="days-grid">
+            ${hasDays
+          ? edition.days.map(buildDayPill).join('')
+          : `<p class="empty-edition">No entries yet.</p>`
+        }
+          </div>
+        </div>
+      `;
+    }
+
+    function buildDayPill(day) {
+      const isLive = day.status === 'live';
+      const label = day.day === 0 ? 'Day 0 — Intro' : `Day ${String(day.day).padStart(2, '0')}`;
+      const href = isLive ? day.slug : '#';
+      const classes = `day-pill${isLive ? '' : ' coming'}`;
+      return `
+        <a class="${classes}" href="${href}">
+          <span class="day-pill__num">${label}</span>
+          <span class="day-pill__title">${day.title}</span>
+          <span class="day-pill__date">${day.date}</span>
+        </a>
+      `;
+    }
+
+    function toggleEdition(id) {
+      document.getElementById(id)?.classList.toggle('open');
+    }
+
+    function statusLabel(s) {
+      if (s === 'live') return 'Active';
+      if (s === 'coming') return 'Coming Soon';
+      if (s === 'complete') return 'Complete';
+      return s;
+    }
+
+    document.addEventListener('DOMContentLoaded', buildSeriesPage);
+  </script>
+</body>
+
+</html>
