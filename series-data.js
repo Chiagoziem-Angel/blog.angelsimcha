@@ -33,7 +33,7 @@ const SERIES_DATA = [
           {
             day: 0,
             title: 'Welcome to APAD Edition 3',
-            date: 'May 1, 2026',
+            date: 'April 30, 2026',
             slug: 'series/apad/edition-3/day-00.html',
             status: 'live',
           },
@@ -41,7 +41,7 @@ const SERIES_DATA = [
           // {
           //   day:    1,
           //   title:  'Proverbs 1 — The Beginning of Wisdom',
-          //   date:   'May 2, 2026',
+          //   date:   'May 1, 2026',
           //   slug:   'series/apad/edition-3/day-01.html',
           //   status: 'live',
           // },
@@ -90,7 +90,7 @@ const SERIES_DATA = [
           {
             day: 0,
             title: 'Edition 2 is Coming — July 2026',
-            date: 'July 1, 2026',
+            date: 'May 30, 2026',
             slug: 'series/wisdom/edition-2/day-00.html',
             status: 'coming',
           },
