@@ -5,10 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Series — Angel Simcha</title>
-  <meta name="description" content="31-day writing series on faith, wisdom and the word of God." />
+  <meta name="description" content="31-day writing series on faith, wisdom, and the word of God." />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* ── Series Page Styles ─────────────────────────────── */
     .series-hero {
       padding: 72px 24px 56px;
       border-bottom: 1px solid var(--border);
@@ -27,7 +26,6 @@
       line-height: 1.75;
     }
 
-    /* ── Series Cards ───────────────────────────────────── */
     .series-grid {
       padding: 64px 24px 80px;
     }
@@ -57,7 +55,6 @@
       padding: 4px 10px;
       border-radius: 100px;
       margin-bottom: 16px;
-      background: var(--series-color, var(--gold));
       color: #fff;
     }
 
@@ -82,11 +79,6 @@
       line-height: 1.75;
     }
 
-    /* ── Editions ───────────────────────────────────────── */
-    .editions-list {
-      padding: 0;
-    }
-
     .edition-block {
       padding: 24px 36px;
       border-bottom: 1px solid var(--border);
@@ -109,6 +101,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      flex-wrap: wrap;
     }
 
     .edition-label {
@@ -152,13 +145,13 @@
       font-size: 1rem;
       color: var(--ink-soft);
       transition: transform 0.2s;
+      flex-shrink: 0;
     }
 
     .edition-block.open .edition-toggle {
       transform: rotate(180deg);
     }
 
-    /* ── Days Grid ──────────────────────────────────────── */
     .days-grid {
       display: none;
       grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -178,9 +171,9 @@
       border-radius: 6px;
       font-size: 0.82rem;
       line-height: 1.4;
-      transition: border-color 0.2s, background 0.2s;
       text-decoration: none;
       color: var(--ink);
+      transition: border-color 0.2s, background 0.2s;
     }
 
     .day-pill:hover {
@@ -189,9 +182,8 @@
     }
 
     .day-pill.coming {
-      opacity: 0.45;
+      opacity: 0.4;
       pointer-events: none;
-      cursor: default;
     }
 
     .day-pill__num {
@@ -201,10 +193,6 @@
       text-transform: uppercase;
       color: var(--gold);
       margin-bottom: 4px;
-    }
-
-    .day-pill.coming .day-pill__num {
-      color: var(--ink-soft);
     }
 
     .day-pill__title {
@@ -218,18 +206,36 @@
       margin-top: 4px;
     }
 
-    .empty-edition {
-      font-size: 0.88rem;
-      color: var(--ink-soft);
-      font-style: italic;
-      padding: 8px 0;
+    .days-skeleton {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+    }
+
+    .day-skel {
+      height: 72px;
+      border-radius: 6px;
+      background: var(--cream-dark);
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .5
+      }
     }
 
     @media (max-width: 600px) {
 
       .series-card__header,
       .edition-block {
-        padding: 20px 20px;
+        padding: 20px;
       }
 
       .days-grid {
@@ -241,7 +247,6 @@
 
 <body>
 
-  <!-- ── Navigation ─────────────────────────────────────── -->
   <nav class="nav">
     <div class="nav__inner">
       <a href="index.html" class="nav__logo">Angel<br>Simcha</a>
@@ -254,84 +259,129 @@
     </div>
   </nav>
 
-  <!-- ── Hero ───────────────────────────────────────────── -->
   <section class="series-hero">
     <div class="container">
       <h1>Series</h1>
-      <p>
-        Thirty-one days at a time. Deep dives into God's word, journal entries
-        and lessons from the journey...published in seasons.
-      </p>
+      <p>Thirty-one days at a time. Deep dives into God's word, journal entries, and lessons from the road — published
+        in seasons.</p>
     </div>
   </section>
 
-  <!-- ── Series Cards ───────────────────────────────────── -->
   <section class="series-grid">
     <div class="container">
       <div id="series-container"></div>
     </div>
   </section>
 
-  <!-- ── Footer ─────────────────────────────────────────── -->
   <footer class="footer">
     <p>© 2026 Angel Simcha. All rights reserved.</p>
   </footer>
 
   <script src="series-data.js"></script>
   <script>
-    function buildSeriesPage() {
-      const container = document.getElementById('series-container');
-      if (!container || !SERIES_DATA) return;
+    /*
+     * SERIES_META defines the static info about each series
+     * (title, description, color). The DAYS are fetched live
+     * from Supabase via the API.
+     */
+    const SERIES_META = [
+      {
+        id: 'apad',
+        title: 'A Proverb A Day',
+        shortTitle: 'APAD',
+        tagline: 'One chapter of Proverbs. Thirty-one days. Straight from the source.',
+        description: 'Every success principle you\'ve ever read in a business book came from somewhere. This series goes straight to the source — one chapter of Proverbs a day, and what it actually means for your life right now.',
+        color: '#C9A227',
+        editions: [
+          { id: 'e3', num: 3, label: 'Edition 3', period: 'May 2026', status: 'live' },
+          { id: 'e2', num: 2, label: 'Edition 2', period: 'October 2025', status: 'complete' },
+          { id: 'e1', num: 1, label: 'Edition 1', period: 'May 2025', status: 'complete' },
+        ],
+      },
+      {
+        id: 'wisdom',
+        title: '31 Days of Empowered Wisdom',
+        shortTitle: 'Empowered Wisdom',
+        tagline: 'Thirty-one days of bite-sized journal entries on clarity, growth, and the lessons in between.',
+        description: 'Notes from my journals — real lessons from real wrestling. Thirty-one days, one entry at a time, on what it means to grow, lead, and live with intention.',
+        color: '#7A5C2E',
+        editions: [
+          { id: 'e2', num: 2, label: 'Edition 2', period: 'July 2026', status: 'coming' },
+          { id: 'e1', num: 1, label: 'Edition 1', period: 'July 2025', status: 'complete' },
+        ],
+      },
+    ];
 
-      container.innerHTML = SERIES_DATA.map(series => `
+    async function buildPage() {
+      const container = document.getElementById('series-container');
+
+      container.innerHTML = SERIES_META.map((series, si) => `
         <div class="series-card">
-          <div class="series-card__header" style="--series-color: ${series.color}">
+          <div class="series-card__header">
             <span class="series-card__tag" style="background:${series.color}">${series.shortTitle}</span>
             <h2 class="series-card__title">${series.title}</h2>
             <p class="series-card__tagline">${series.tagline}</p>
             <p class="series-card__desc">${series.description}</p>
           </div>
-          <div class="editions-list">
-            ${series.editions.map((edition, i) => buildEdition(edition, i === 0)).join('')}
+          <div class="editions-list" id="editions-${series.id}">
+            ${series.editions.map((ed, ei) => `
+              <div class="edition-block ${ei === 0 ? 'open' : ''}" id="ed-${series.id}-${ed.num}">
+                <div class="edition-header" onclick="toggleEdition('ed-${series.id}-${ed.num}')">
+                  <div class="edition-header__left">
+                    <span class="edition-label">${ed.label}</span>
+                    <span class="edition-period">${ed.period}</span>
+                    <span class="edition-status ${ed.status}">${statusLabel(ed.status)}</span>
+                  </div>
+                  <span class="edition-toggle">↓</span>
+                </div>
+                <div class="days-grid" id="days-${series.id}-${ed.num}">
+                  <div class="days-skeleton">
+                    ${[1, 2, 3, 4].map(() => '<div class="day-skel"></div>').join('')}
+                  </div>
+                </div>
+              </div>
+            `).join('')}
           </div>
         </div>
       `).join('');
-    }
 
-    function buildEdition(edition, openByDefault) {
-      const hasDays = edition.days && edition.days.length > 0;
-      return `
-        <div class="edition-block ${openByDefault ? 'open' : ''}" id="${edition.id}">
-          <div class="edition-header" onclick="toggleEdition('${edition.id}')">
-            <div class="edition-header__left">
-              <span class="edition-label">${edition.label}</span>
-              <span class="edition-period">${edition.period}</span>
-              <span class="edition-status ${edition.status}">${statusLabel(edition.status)}</span>
-            </div>
-            <span class="edition-toggle">↓</span>
-          </div>
-          <div class="days-grid">
-            ${hasDays
-          ? edition.days.map(buildDayPill).join('')
-          : `<p class="empty-edition">No entries yet.</p>`
+      // Fetch days for each series/edition from Supabase
+      for (const series of SERIES_META) {
+        for (const ed of series.editions) {
+          loadDays(series.id, ed.num, series.color);
         }
-          </div>
-        </div>
-      `;
+      }
     }
 
-    function buildDayPill(day) {
-      const isLive = day.status === 'live';
-      const label = day.day === 0 ? 'Day 0 — Intro' : `Day ${String(day.day).padStart(2, '0')}`;
-      const href = isLive ? day.slug : '#';
-      const classes = `day-pill${isLive ? '' : ' coming'}`;
-      return `
-        <a class="${classes}" href="${href}">
-          <span class="day-pill__num">${label}</span>
-          <span class="day-pill__title">${day.title}</span>
-          <span class="day-pill__date">${day.date}</span>
-        </a>
-      `;
+    async function loadDays(seriesId, edition, color) {
+      const gridEl = document.getElementById(`days-${seriesId}-${edition}`);
+      if (!gridEl) return;
+
+      try {
+        const res = await fetch(`/api/get-series-days?series=${seriesId}&edition=${edition}`);
+        const data = await res.json();
+
+        if (!res.ok || !data.posts) throw new Error();
+
+        if (data.posts.length === 0) {
+          gridEl.innerHTML = `<p style="font-size:0.88rem;color:var(--ink-soft);font-style:italic;">No entries yet.</p>`;
+          return;
+        }
+
+        gridEl.innerHTML = data.posts.map(post => {
+          const label = post.day === 0 ? 'Day 0 — Intro' : `Day ${String(post.day).padStart(2, '0')}`;
+          const url = `series-day.html?series=${seriesId}&edition=${edition}&day=${post.day}`;
+          return `
+            <a class="day-pill" href="${url}">
+              <span class="day-pill__num" style="color:${color}">${label}</span>
+              <span class="day-pill__title">${post.title}</span>
+              <span class="day-pill__date">${post.date_label || ''}</span>
+            </a>`;
+        }).join('');
+
+      } catch {
+        gridEl.innerHTML = `<p style="font-size:0.82rem;color:var(--ink-soft);">Couldn't load entries.</p>`;
+      }
     }
 
     function toggleEdition(id) {
@@ -345,7 +395,7 @@
       return s;
     }
 
-    document.addEventListener('DOMContentLoaded', buildSeriesPage);
+    document.addEventListener('DOMContentLoaded', buildPage);
   </script>
 </body>
 

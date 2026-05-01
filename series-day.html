@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading… — Angel Simcha</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Render the Quill HTML output with site styling */
+    .series-content {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--ink-mid);
+    }
+
+    .series-content p {
+      margin-bottom: 24px;
+    }
+
+    .series-content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 40px 0 16px;
+    }
+
+    .series-content h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 32px 0 12px;
+    }
+
+    .series-content blockquote {
+      border-left: 3px solid var(--gold);
+      padding: 4px 0 4px 24px;
+      margin: 32px 0;
+      font-style: italic;
+      color: var(--ink);
+    }
+
+    .series-content a {
+      color: var(--gold-dark);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .series-content ul,
+    .series-content ol {
+      padding-left: 24px;
+      margin-bottom: 24px;
+    }
+
+    .series-content li {
+      margin-bottom: 8px;
+    }
+
+    .series-content strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .series-content img {
+      max-width: 100%;
+      border-radius: 4px;
+      margin: 24px 0;
+    }
+
+    .post-loading {
+      padding: 80px 0;
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+    }
+
+    .post-error {
+      padding: 80px 0;
+      color: var(--ink-soft);
+    }
+
+    .post-error a {
+      color: var(--gold);
+    }
+
+    /* Series breadcrumb */
+    .breadcrumb {
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb a {
+      color: var(--gold);
+    }
+
+    .breadcrumb span {
+      color: var(--border);
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">Angel<br>Simcha</a>
+      <ul class="nav__links">
+        <li><a href="index.html">Letters</a></li>
+        <li><a href="series.html" class="active">Series</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <a href="index.html#subscribe" class="btn btn--gold">Subscribe</a>
+    </div>
+  </nav>
+
+  <article>
+    <section class="letter-page">
+      <div class="container">
+
+        <div class="post-loading" id="post-loading">Loading…</div>
+
+        <div id="post-error" style="display:none;" class="post-error">
+          This post couldn't be loaded.
+          <a href="series.html">← Back to series</a>
+        </div>
+
+        <div id="post-content" style="display:none;">
+
+          <!-- Breadcrumb -->
+          <div class="breadcrumb" id="breadcrumb"></div>
+
+          <header class="letter-header">
+            <div class="letter-header__meta">
+              <span class="letter-header__tag" id="post-tag"></span>
+              <span class="letter-header__date" id="post-date"></span>
+              <span class="letter-header__read-time" id="post-read-time"></span>
+            </div>
+            <h1 class="letter-header__title" id="post-title"></h1>
+          </header>
+
+          <div class="letter-body">
+            <div class="series-content" id="post-body"></div>
+            <div class="letter-signature">
+              Shallom 🤍<br>
+              <strong>Angel</strong>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </article>
+
+  <hr class="divider" />
+
+  <!-- Day navigation -->
+  <section class="read-next" id="day-nav" style="display:none;">
+    <div class="container">
+      <p class="read-next__label" id="nav-label"></p>
+      <div class="read-next__list" id="nav-links"></div>
+    </div>
+  </section>
+
+  <!-- Subscribe -->
+  <section class="letter-subscribe">
+    <div class="container">
+      <div class="subscribe-banner">
+        <h2 class="subscribe-banner__title serif">Follow Along Daily</h2>
+        <p class="subscribe-banner__sub">Get each day's entry delivered straight to your inbox.</p>
+        <div class="subscribe-message" id="letter-message"></div>
+        <div id="letter-form-wrap">
+          <div class="subscribe-block">
+            <div class="subscribe-block__form">
+              <input type="email" id="letter-email" placeholder="Your email address" autocomplete="email" />
+              <button class="btn btn--gold"
+                onclick="handleSubscribe('letter-email','letter-message','letter-form-wrap')">Subscribe</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2026 Angel Simcha. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="series-data.js"></script>
+  <script>
+    const SERIES_LABELS = {
+      apad: { name: 'A Proverb A Day', short: 'APAD', color: '#C9A227' },
+      wisdom: { name: '31 Days of Empowered Wisdom', short: 'EW', color: '#7A5C2E' },
+    };
+
+    (async function () {
+      const params = new URLSearchParams(window.location.search);
+      const series = params.get('series');
+      const edition = params.get('edition');
+      const day = params.get('day');
+
+      const loadEl = document.getElementById('post-loading');
+      const errorEl = document.getElementById('post-error');
+      const contentEl = document.getElementById('post-content');
+
+      if (!series || !edition || day === null) {
+        loadEl.style.display = 'none';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/get-series-post?series=${series}&edition=${edition}&day=${day}`);
+        const data = await res.json();
+
+        if (!res.ok || !data.post) throw new Error('Not found');
+
+        const post = data.post;
+        const meta = SERIES_LABELS[series] || { name: series, short: series, color: '#C9A227' };
+
+        // Page title
+        document.title = `${post.title} — Angel Simcha`;
+
+        // Breadcrumb
+        document.getElementById('breadcrumb').innerHTML = `
+          <a href="series.html">Series</a>
+          <span>›</span>
+          <span>${meta.name}</span>
+          <span>›</span>
+          <span>Edition ${edition}</span>
+          <span>›</span>
+          <span>Day ${day}</span>
+        `;
+
+        // Meta
+        document.getElementById('post-tag').textContent = `${meta.short} · Edition ${edition} · Day ${day}`;
+        document.getElementById('post-tag').style.color = meta.color;
+        document.getElementById('post-date').textContent = post.date_label || '';
+        document.getElementById('post-read-time').textContent = estimateReadTime(post.content) + ' read';
+
+        // Content
+        document.getElementById('post-title').textContent = post.title;
+        document.getElementById('post-body').innerHTML = post.content;
+
+        // Day navigation
+        buildNavLinks(series, edition, Number(day), meta);
+
+        loadEl.style.display = 'none';
+        contentEl.style.display = 'block';
+
+      } catch (err) {
+        loadEl.style.display = 'none';
+        errorEl.style.display = 'block';
+      }
+    })();
+
+    function buildNavLinks(series, edition, currentDay, meta) {
+      const navEl = document.getElementById('day-nav');
+      const labelEl = document.getElementById('nav-label');
+      const linksEl = document.getElementById('nav-links');
+
+      navEl.style.display = 'block';
+      labelEl.textContent = `${meta.name} — Edition ${edition}`;
+
+      const links = [];
+
+      if (currentDay > 0) {
+        links.push(`
+          <a class="read-next__item" href="series-day.html?series=${series}&edition=${edition}&day=${currentDay - 1}">
+            <span class="read-next__item-date">← Day ${currentDay - 1 === 0 ? '0 (Intro)' : currentDay - 1}</span>
+            <span class="read-next__item-title">Previous day</span>
+          </a>`);
+      }
+
+      if (currentDay < 31) {
+        links.push(`
+          <a class="read-next__item" href="series-day.html?series=${series}&edition=${edition}&day=${currentDay + 1}">
+            <span class="read-next__item-date">Day ${currentDay + 1} →</span>
+            <span class="read-next__item-title">Next day</span>
+          </a>`);
+      }
+
+      links.push(`
+        <a class="read-next__item" href="series.html">
+          <span class="read-next__item-date">←</span>
+          <span class="read-next__item-title">All series</span>
+        </a>`);
+
+      linksEl.innerHTML = links.join('');
+    }
+
+    function estimateReadTime(html) {
+      const text = html.replace(/<[^>]+>/g, ' ');
+      const words = text.split(/\s+/).filter(Boolean).length;
+      return Math.max(1, Math.round(words / 200)) + ' min';
+    }
+  </script>
+</body>
+
+</html>

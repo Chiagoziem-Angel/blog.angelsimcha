@@ -9,6 +9,14 @@
       "destination": "/series.html"
     },
     {
+      "source": "/series-day",
+      "destination": "/series-day.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
       "source": "/about",
       "destination": "/about.html"
     },
