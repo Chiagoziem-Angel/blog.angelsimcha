@@ -500,9 +500,6 @@
             ✓ ${status === 'live' ? 'Published' : 'Saved as draft'} successfully!
             <a href="${url}" target="_blank" style="color:#C9A227;margin-left:8px;">View post →</a>
           `);
-          // Update series-data.js reminder
-          document.getElementById('preview-link').innerHTML =
-            `<span style="color:#7A756C;">Remember to update series-data.js for the day pill to appear on the series page.</span>`;
         }
       } catch (err) {
         showStatus(msgEl, 'error', `Network error: ${err.message}`);

@@ -7,23 +7,28 @@
   <title>Loading… — Angel Simcha</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Render the Quill HTML output with site styling */
+    /* ── Scoped content styles — Quill output ────────────── */
+    /* NOTE: p margin is scoped here only, NOT global,        */
+    /* so Quill's <p> tags don't get double-spaced.           */
     .series-content {
       font-size: 1.05rem;
       line-height: 1.85;
       color: var(--ink-mid);
     }
 
+    /* Quill wraps every line in <p> — keep spacing tight */
     .series-content p {
-      margin-bottom: 24px;
+      margin-bottom: 12px;
+      /* was 24px globally — reduced to avoid double-spacing */
     }
 
+    /* Only add extra space before headings */
     .series-content h2 {
       font-family: 'Playfair Display', serif;
       font-size: 1.4rem;
       font-weight: 700;
       color: var(--ink);
-      margin: 40px 0 16px;
+      margin: 40px 0 12px;
     }
 
     .series-content h3 {
@@ -31,13 +36,13 @@
       font-size: 1.15rem;
       font-weight: 600;
       color: var(--ink);
-      margin: 32px 0 12px;
+      margin: 32px 0 10px;
     }
 
     .series-content blockquote {
       border-left: 3px solid var(--gold);
       padding: 4px 0 4px 24px;
-      margin: 32px 0;
+      margin: 28px 0;
       font-style: italic;
       color: var(--ink);
     }
@@ -51,11 +56,11 @@
     .series-content ul,
     .series-content ol {
       padding-left: 24px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .series-content li {
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .series-content strong {
@@ -69,6 +74,13 @@
       margin: 24px 0;
     }
 
+    /* Remove extra space from empty Quill paragraphs (<p><br></p>) */
+    .series-content p:has(> br:only-child) {
+      margin-bottom: 0;
+      line-height: 0.5;
+    }
+
+    /* ── States ──────────────────────────────────────────── */
     .post-loading {
       padding: 80px 0;
       text-align: center;
@@ -85,7 +97,7 @@
       color: var(--gold);
     }
 
-    /* Series breadcrumb */
+    /* ── Breadcrumb ───────────────────────────────────────── */
     .breadcrumb {
       font-size: 0.8rem;
       color: var(--ink-soft);
@@ -133,7 +145,6 @@
 
         <div id="post-content" style="display:none;">
 
-          <!-- Breadcrumb -->
           <div class="breadcrumb" id="breadcrumb"></div>
 
           <header class="letter-header">
@@ -180,7 +191,9 @@
             <div class="subscribe-block__form">
               <input type="email" id="letter-email" placeholder="Your email address" autocomplete="email" />
               <button class="btn btn--gold"
-                onclick="handleSubscribe('letter-email','letter-message','letter-form-wrap')">Subscribe</button>
+                onclick="handleSubscribe('letter-email','letter-message','letter-form-wrap')">
+                Subscribe
+              </button>
             </div>
           </div>
         </div>
@@ -193,11 +206,10 @@
   </footer>
 
   <script src="script.js"></script>
-  <script src="series-data.js"></script>
   <script>
     const SERIES_LABELS = {
       apad: { name: 'A Proverb A Day', short: 'APAD', color: '#C9A227' },
-      wisdom: { name: '31 Days of Empowered Wisdom', short: 'EW', color: '#7A5C2E' },
+      wisdom: { name: '31 Days of Empowered Wisdom', short: 'Empowered Wisdom', color: '#7A5C2E' },
     };
 
     (async function () {
@@ -225,10 +237,8 @@
         const post = data.post;
         const meta = SERIES_LABELS[series] || { name: series, short: series, color: '#C9A227' };
 
-        // Page title
         document.title = `${post.title} — Angel Simcha`;
 
-        // Breadcrumb
         document.getElementById('breadcrumb').innerHTML = `
           <a href="series.html">Series</a>
           <span>›</span>
@@ -239,17 +249,15 @@
           <span>Day ${day}</span>
         `;
 
-        // Meta
-        document.getElementById('post-tag').textContent = `${meta.short} · Edition ${edition} · Day ${day}`;
-        document.getElementById('post-tag').style.color = meta.color;
+        const postTag = document.getElementById('post-tag');
+        postTag.textContent = `${meta.short} · Edition ${edition} · Day ${day}`;
+        postTag.style.color = meta.color;
+
         document.getElementById('post-date').textContent = post.date_label || '';
         document.getElementById('post-read-time').textContent = estimateReadTime(post.content) + ' read';
-
-        // Content
         document.getElementById('post-title').textContent = post.title;
         document.getElementById('post-body').innerHTML = post.content;
 
-        // Day navigation
         buildNavLinks(series, edition, Number(day), meta);
 
         loadEl.style.display = 'none';

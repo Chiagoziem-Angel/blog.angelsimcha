@@ -47,17 +47,21 @@ export default async function handler(req, res) {
   };
 
   try {
-    // Upsert — insert or update if (series_id, edition, day) already exists
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/series_posts`, {
-      method: 'POST',
-      headers: {
-        apikey: SUPABASE_SERVICE_KEY,
-        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'resolution=merge-duplicates,return=representation',
-      },
-      body: JSON.stringify(payload),
-    });
+    // Upsert — the on_conflict param tells Supabase to UPDATE if the
+    // (series_id, edition, day) combo already exists, instead of erroring.
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/series_posts?on_conflict=series_id,edition,day`,
+      {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_SERVICE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates,return=representation',
+        },
+        body: JSON.stringify(payload),
+      }
+    );
 
     const data = await response.json();
 
