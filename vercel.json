@@ -5,6 +5,10 @@
       "destination": "/api/$1"
     },
     {
+      "source": "/series/:seriesId/:edition/:day",
+      "destination": "/series-day.html?series=:seriesId&edition=:edition&day=:day"
+    },
+    {
       "source": "/series",
       "destination": "/series.html"
     },

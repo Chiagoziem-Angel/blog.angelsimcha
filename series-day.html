@@ -7,22 +7,16 @@
   <title>Loading… — Angel Simcha</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* ── Scoped content styles — Quill output ────────────── */
-    /* NOTE: p margin is scoped here only, NOT global,        */
-    /* so Quill's <p> tags don't get double-spaced.           */
     .series-content {
       font-size: 1.05rem;
       line-height: 1.85;
       color: var(--ink-mid);
     }
 
-    /* Quill wraps every line in <p> — keep spacing tight */
     .series-content p {
       margin-bottom: 12px;
-      /* was 24px globally — reduced to avoid double-spacing */
     }
 
-    /* Only add extra space before headings */
     .series-content h2 {
       font-family: 'Playfair Display', serif;
       font-size: 1.4rem;
@@ -74,13 +68,11 @@
       margin: 24px 0;
     }
 
-    /* Remove extra space from empty Quill paragraphs (<p><br></p>) */
     .series-content p:has(> br:only-child) {
       margin-bottom: 0;
       line-height: 0.5;
     }
 
-    /* ── States ──────────────────────────────────────────── */
     .post-loading {
       padding: 80px 0;
       text-align: center;
@@ -97,7 +89,6 @@
       color: var(--gold);
     }
 
-    /* ── Breadcrumb ───────────────────────────────────────── */
     .breadcrumb {
       font-size: 0.8rem;
       color: var(--ink-soft);
@@ -135,18 +126,12 @@
   <article>
     <section class="letter-page">
       <div class="container">
-
         <div class="post-loading" id="post-loading">Loading…</div>
-
         <div id="post-error" style="display:none;" class="post-error">
-          This post couldn't be loaded.
-          <a href="series.html">← Back to series</a>
+          This post couldn't be loaded. <a href="series.html">← Back to series</a>
         </div>
-
         <div id="post-content" style="display:none;">
-
           <div class="breadcrumb" id="breadcrumb"></div>
-
           <header class="letter-header">
             <div class="letter-header__meta">
               <span class="letter-header__tag" id="post-tag"></span>
@@ -155,15 +140,10 @@
             </div>
             <h1 class="letter-header__title" id="post-title"></h1>
           </header>
-
           <div class="letter-body">
             <div class="series-content" id="post-body"></div>
-            <div class="letter-signature">
-              Shallom 🤍<br>
-              <strong>Angel</strong>
-            </div>
+            <div class="letter-signature">Shallom 🤍<br><strong>Angel</strong></div>
           </div>
-
         </div>
       </div>
     </section>
@@ -171,7 +151,6 @@
 
   <hr class="divider" />
 
-  <!-- Day navigation -->
   <section class="read-next" id="day-nav" style="display:none;">
     <div class="container">
       <p class="read-next__label" id="nav-label"></p>
@@ -179,7 +158,6 @@
     </div>
   </section>
 
-  <!-- Subscribe -->
   <section class="letter-subscribe">
     <div class="container">
       <div class="subscribe-banner">
@@ -191,9 +169,7 @@
             <div class="subscribe-block__form">
               <input type="email" id="letter-email" placeholder="Your email address" autocomplete="email" />
               <button class="btn btn--gold"
-                onclick="handleSubscribe('letter-email','letter-message','letter-form-wrap')">
-                Subscribe
-              </button>
+                onclick="handleSubscribe('letter-email','letter-message','letter-form-wrap')">Subscribe</button>
             </div>
           </div>
         </div>
@@ -206,11 +182,14 @@
   </footer>
 
   <script src="script.js"></script>
+  <!-- Reads series names/colors from the single config file -->
+  <script src="series-config.js"></script>
   <script>
-    const SERIES_LABELS = {
-      apad: { name: 'A Proverb A Day', short: 'APAD', color: '#C9A227' },
-      wisdom: { name: '31 Days of Empowered Wisdom', short: 'Empowered Wisdom', color: '#7A5C2E' },
-    };
+    // Build a lookup map from SERIES_CONFIG so any series is recognised automatically
+    const SERIES_LABELS = {};
+    SERIES_CONFIG.forEach(s => {
+      SERIES_LABELS[s.id] = { name: s.title, short: s.shortTitle, color: s.color };
+    });
 
     (async function () {
       const params = new URLSearchParams(window.location.search);
@@ -231,7 +210,6 @@
       try {
         const res = await fetch(`/api/get-series-post?series=${series}&edition=${edition}&day=${day}`);
         const data = await res.json();
-
         if (!res.ok || !data.post) throw new Error('Not found');
 
         const post = data.post;
@@ -240,18 +218,14 @@
         document.title = `${post.title} — Angel Simcha`;
 
         document.getElementById('breadcrumb').innerHTML = `
-          <a href="series.html">Series</a>
-          <span>›</span>
-          <span>${meta.name}</span>
-          <span>›</span>
-          <span>Edition ${edition}</span>
-          <span>›</span>
-          <span>Day ${day}</span>
-        `;
+          <a href="series.html">Series</a><span>›</span>
+          <span>${meta.name}</span><span>›</span>
+          <span>Edition ${edition}</span><span>›</span>
+          <span>Day ${day}</span>`;
 
-        const postTag = document.getElementById('post-tag');
-        postTag.textContent = `${meta.short} · Edition ${edition} · Day ${day}`;
-        postTag.style.color = meta.color;
+        const tagEl = document.getElementById('post-tag');
+        tagEl.textContent = `${meta.short} · Edition ${edition} · Day ${day}`;
+        tagEl.style.color = meta.color;
 
         document.getElementById('post-date').textContent = post.date_label || '';
         document.getElementById('post-read-time').textContent = estimateReadTime(post.content) + ' read';
@@ -263,50 +237,36 @@
         loadEl.style.display = 'none';
         contentEl.style.display = 'block';
 
-      } catch (err) {
+      } catch {
         loadEl.style.display = 'none';
         errorEl.style.display = 'block';
       }
     })();
 
     function buildNavLinks(series, edition, currentDay, meta) {
-      const navEl = document.getElementById('day-nav');
-      const labelEl = document.getElementById('nav-label');
-      const linksEl = document.getElementById('nav-links');
-
-      navEl.style.display = 'block';
-      labelEl.textContent = `${meta.name} — Edition ${edition}`;
-
+      document.getElementById('day-nav').style.display = 'block';
+      document.getElementById('nav-label').textContent = `${meta.name} — Edition ${edition}`;
       const links = [];
-
-      if (currentDay > 0) {
-        links.push(`
-          <a class="read-next__item" href="series-day.html?series=${series}&edition=${edition}&day=${currentDay - 1}">
-            <span class="read-next__item-date">← Day ${currentDay - 1 === 0 ? '0 (Intro)' : currentDay - 1}</span>
-            <span class="read-next__item-title">Previous day</span>
-          </a>`);
-      }
-
-      if (currentDay < 31) {
-        links.push(`
-          <a class="read-next__item" href="series-day.html?series=${series}&edition=${edition}&day=${currentDay + 1}">
-            <span class="read-next__item-date">Day ${currentDay + 1} →</span>
-            <span class="read-next__item-title">Next day</span>
-          </a>`);
-      }
-
+      if (currentDay > 0) links.push(`
+        <a class="read-next__item" href="series/${series}/${edition}/${currentDay - 1}">
+          <span class="read-next__item-date">← Day ${currentDay - 1 === 0 ? '0 (Intro)' : currentDay - 1}</span>
+          <span class="read-next__item-title">Previous day</span>
+        </a>`);
+      if (currentDay < 31) links.push(`
+        <a class="read-next__item" href="series/${series}/${edition}/${currentDay + 1}">
+          <span class="read-next__item-date">Day ${currentDay + 1} →</span>
+          <span class="read-next__item-title">Next day</span>
+        </a>`);
       links.push(`
         <a class="read-next__item" href="series.html">
           <span class="read-next__item-date">←</span>
           <span class="read-next__item-title">All series</span>
         </a>`);
-
-      linksEl.innerHTML = links.join('');
+      document.getElementById('nav-links').innerHTML = links.join('');
     }
 
     function estimateReadTime(html) {
-      const text = html.replace(/<[^>]+>/g, ' ');
-      const words = text.split(/\s+/).filter(Boolean).length;
+      const words = html.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
       return Math.max(1, Math.round(words / 200)) + ' min';
     }
   </script>
