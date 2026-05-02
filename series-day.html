@@ -113,13 +113,13 @@
 
   <nav class="nav">
     <div class="nav__inner">
-      <a href="index.html" class="nav__logo">Angel<br>Simcha</a>
+      <a href="/index.html" class="nav__logo">Angel<br>Simcha</a>
       <ul class="nav__links">
-        <li><a href="index.html">Letters</a></li>
-        <li><a href="series.html" class="active">Series</a></li>
-        <li><a href="about.html">About</a></li>
+        <li><a href="/index.html">Letters</a></li>
+        <li><a href="/series" class="active">Series</a></li>
+        <li><a href="/about">About</a></li>
       </ul>
-      <a href="index.html#subscribe" class="btn btn--gold">Subscribe</a>
+      <a href="/#subscribe" class="btn btn--gold">Subscribe</a>
     </div>
   </nav>
 
@@ -128,7 +128,7 @@
       <div class="container">
         <div class="post-loading" id="post-loading">Loading…</div>
         <div id="post-error" style="display:none;" class="post-error">
-          This post couldn't be loaded. <a href="series.html">← Back to series</a>
+          This post couldn't be loaded. <a href="/series">← Back to series</a>
         </div>
         <div id="post-content" style="display:none;">
           <div class="breadcrumb" id="breadcrumb"></div>
@@ -192,10 +192,22 @@
     });
 
     (async function () {
+      // Support both clean URLs (/series/apad/3/1) and query params (?series=apad&edition=3&day=1)
       const params = new URLSearchParams(window.location.search);
-      const series = params.get('series');
-      const edition = params.get('edition');
-      const day = params.get('day');
+      let series = params.get('series');
+      let edition = params.get('edition');
+      let day = params.get('day');
+
+      // If query params are missing, parse from the path /series/{series}/{edition}/{day}
+      if (!series || !edition || day === null) {
+        const parts = window.location.pathname.split('/').filter(Boolean);
+        // parts = ['series', 'apad', '3', '1']
+        if (parts.length >= 4 && parts[0] === 'series') {
+          series = parts[1];
+          edition = parts[2];
+          day = parts[3];
+        }
+      }
 
       const loadEl = document.getElementById('post-loading');
       const errorEl = document.getElementById('post-error');
@@ -218,7 +230,7 @@
         document.title = `${post.title} — Angel Simcha`;
 
         document.getElementById('breadcrumb').innerHTML = `
-          <a href="series.html">Series</a><span>›</span>
+          <a href="/series">Series</a><span>›</span>
           <span>${meta.name}</span><span>›</span>
           <span>Edition ${edition}</span><span>›</span>
           <span>Day ${day}</span>`;
@@ -248,17 +260,17 @@
       document.getElementById('nav-label').textContent = `${meta.name} — Edition ${edition}`;
       const links = [];
       if (currentDay > 0) links.push(`
-        <a class="read-next__item" href="series/${series}/${edition}/${currentDay - 1}">
+        <a class="read-next__item" href="/series/${series}/${edition}/${currentDay - 1}">
           <span class="read-next__item-date">← Day ${currentDay - 1 === 0 ? '0 (Intro)' : currentDay - 1}</span>
           <span class="read-next__item-title">Previous day</span>
         </a>`);
       if (currentDay < 31) links.push(`
-        <a class="read-next__item" href="series/${series}/${edition}/${currentDay + 1}">
+        <a class="read-next__item" href="/series/${series}/${edition}/${currentDay + 1}">
           <span class="read-next__item-date">Day ${currentDay + 1} →</span>
           <span class="read-next__item-title">Next day</span>
         </a>`);
       links.push(`
-        <a class="read-next__item" href="series.html">
+        <a class="read-next__item" href="/series">
           <span class="read-next__item-date">←</span>
           <span class="read-next__item-title">All series</span>
         </a>`);
